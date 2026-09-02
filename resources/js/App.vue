@@ -1,7 +1,3 @@
-<script setup>
-const appName = import.meta.env.VITE_APP_NAME || 'Demo';
-</script>
-
 <template>
     <main class="app-shell">
         <p class="eyebrow">Laravel + Vue</p>
@@ -9,3 +5,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'Demo';
         <p class="lede">Your Vite-powered frontend is ready.</p>
     </main>
 </template>
+<script>
+export default {
+    name: 'App',
+    data() {
+        return {
+            appName: import.meta.env.VITE_APP_NAME || 'Laravel',
+        };
+    },
+};
+</script>
