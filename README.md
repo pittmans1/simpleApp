@@ -15,14 +15,25 @@ Docker handles the PHP dependencies, frontend dependencies, frontend build, PHP 
 
 - Docker Desktop with Docker Compose
 
-### First-time setup
+### Quick start
 
-Run these commands from the project root, where `docker-compose.yml` is located:
+Run these commands from the project root, where `docker-compose.yml` is located.
+
+For the first boot, build the images and start every service:
 
 ```bash
-docker compose build app
-docker compose run --rm frontend npm install
+docker compose up -d --build
+```
+
+For later boots, start the existing services:
+
+```bash
 docker compose up -d
+```
+
+Check service status with:
+
+```bash
 docker compose ps
 ```
 
@@ -56,7 +67,7 @@ docker compose run --rm frontend npm install
 
 ### Rebuild production frontend assets
 
-After changing Vue, CSS, or other frontend files, rebuild the image and restart the services:
+The Vite service watches frontend files during development. To rebuild the production assets:
 
 ```bash
 docker compose build app
