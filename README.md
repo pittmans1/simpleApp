@@ -7,6 +7,58 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Run With Docker
+
+Docker handles the PHP dependencies, frontend dependencies, frontend build, PHP application, database, Redis, queue worker, scheduler, and Nginx web server.
+
+### Prerequisites
+
+- Docker Desktop with Docker Compose
+
+### First-time setup
+
+Run these commands from the project root, where `docker-compose.yml` is located:
+
+```bash
+docker compose build app
+docker compose up -d
+docker compose ps
+```
+
+During `docker compose build app`:
+
+- Composer runs `composer install` in the `vendor` build stage.
+- npm runs `npm install` and `npm run build` in the `assets` build stage.
+
+The frontend is then available through the Laravel application at [http://localhost:8000](http://localhost:8000).
+
+### Start or rebuild the frontend
+
+After changing Vue, CSS, or other frontend files, rebuild the image and restart the services:
+
+```bash
+docker compose build app
+docker compose up -d
+```
+
+Or do both in one command:
+
+```bash
+docker compose up -d --build
+```
+
+View service output with:
+
+```bash
+docker compose logs -f app web
+```
+
+Stop the Docker services with:
+
+```bash
+docker compose down
+```
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
