@@ -21,6 +21,7 @@ Run these commands from the project root, where `docker-compose.yml` is located:
 
 ```bash
 docker compose build app
+docker compose run --rm frontend npm install
 docker compose up -d
 docker compose ps
 ```
@@ -29,10 +30,31 @@ During `docker compose build app`:
 
 - Composer runs `composer install` in the `vendor` build stage.
 - npm runs `npm install` and `npm run build` in the `assets` build stage.
+- The `frontend` service runs `npm install` and starts the Vite development server.
 
-The frontend is then available through the Laravel application at [http://localhost:8000](http://localhost:8000).
+The application is available at [http://localhost:8000](http://localhost:8000). Vite runs at [http://localhost:5173](http://localhost:5173) and watches frontend files for changes.
 
-### Start or rebuild the frontend
+### Start the frontend with Docker
+
+Start only the Vite frontend service with:
+
+```bash
+docker compose up -d frontend
+```
+
+The service installs the npm packages automatically and runs:
+
+```bash
+npm run dev -- --host 0.0.0.0
+```
+
+To reinstall frontend dependencies manually:
+
+```bash
+docker compose run --rm frontend npm install
+```
+
+### Rebuild production frontend assets
 
 After changing Vue, CSS, or other frontend files, rebuild the image and restart the services:
 
@@ -50,7 +72,7 @@ docker compose up -d --build
 View service output with:
 
 ```bash
-docker compose logs -f app web
+docker compose logs -f app web frontend
 ```
 
 Stop the Docker services with:

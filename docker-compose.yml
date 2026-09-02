@@ -41,6 +41,18 @@ services:
       - app
     networks: [demo]
 
+  frontend:
+    image: node:22-alpine
+    container_name: demo_frontend
+    working_dir: /var/www/html
+    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/var/www/html
+      - frontend_node_modules:/var/www/html/node_modules
+    networks: [demo]
+
   db:
     image: mysql:8.4
     container_name: demo_db
@@ -120,6 +132,7 @@ services:
 volumes:
   app_public:
   db_data:
+  frontend_node_modules:
   redis_data:
 
 networks:
