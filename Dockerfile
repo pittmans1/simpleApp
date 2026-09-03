@@ -16,7 +16,7 @@ FROM php:8.4-fpm-bookworm
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libicu-dev libonig-dev libzip-dev unzip \
-    && docker-php-ext-install bcmath intl mbstring opcache pdo_mysql zip \
+    && docker-php-ext-install bcmath intl mbstring opcache pcntl pdo_mysql zip \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && rm -rf /var/lib/apt/lists/*
