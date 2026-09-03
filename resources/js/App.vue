@@ -1,6 +1,6 @@
 <template>
     <main class="app-shell">
-        <p class="eyebrow">Laravel + Vue</p>
+        <p class="eyebrow">Laravel + Vue trash pandas</p>
         <h1>{{ appName }}</h1>
         <p class="lede">Your Vite-powered frontend is ready.</p>
     </main>

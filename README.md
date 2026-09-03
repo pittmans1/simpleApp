@@ -42,8 +42,9 @@ During `docker compose build app`:
 - Composer runs `composer install` in the `vendor` build stage.
 - npm runs `npm install` and `npm run build` in the `assets` build stage.
 - The `frontend` service runs `npm install` and starts the Vite development server.
+- The `reverb` service runs the WebSocket server.
 
-The application is available at [http://localhost:8000](http://localhost:8000). Vite runs at [http://localhost:5173](http://localhost:5173) and watches frontend files for changes.
+The application is available at [http://localhost:8000](http://localhost:8000). Vite runs at [http://localhost:5173](http://localhost:5173) and watches frontend files for changes. Reverb runs at [http://localhost:8080](http://localhost:8080).
 
 ### Start the frontend with Docker
 
@@ -51,6 +52,7 @@ Start only the Vite frontend service with:
 
 ```bash
 docker compose up -d frontend
+docker compose up -d reverb
 ```
 
 The service installs the npm packages automatically and runs:

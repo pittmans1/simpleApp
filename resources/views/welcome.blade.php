@@ -3,10 +3,16 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ config('app.name', 'Demo') }}</title>
+        <meta name="nonce" content="{{ Vite::cspNonce() }}">
+        <title>Trash Panda</title>
         @vite(['resources/js/app.js'])
     </head>
     <body>
-        <div id="app"></div>
+        <div>
+            <h1>Welcome to Trash Panda</h1>
+            <p>This is a demo application using Laravel and Vue.js.</p>
+
+        </div>
+        <div id="main"><element-trash-panda></element-trash-panda></div>
     </body>
 </html>
