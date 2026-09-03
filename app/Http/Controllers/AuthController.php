@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Services\AuditLogService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,50 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    private const ACHIEVEMENT_KEYS = [
+        'hello-world', 'trash-taste', 'three-clicks', 'night-shift', 'tiny-bin', 'corner-creep',
+        'scroll-scout', 'keyboard-bandit', 'footer-foodie', 'panda-paparazzi', 'sneaky-swipe',
+        'moonwalk', 'lucky-seven', 'recycle-raccoon', 'deep-dive', 'trash-treasure',
+        'full-den', 'panda-pro',
+    ];
+
+    public function achievements(Request $request): JsonResponse
+    {
+        return response()->json(['achievements' => $request->user()->achievements ?? []]);
+    }
+
+    public function addAchievement(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'key' => ['required', 'string', 'in:'.implode(',', self::ACHIEVEMENT_KEYS)],
+        ]);
+        $user = $request->user();
+        $achievements = array_values(array_unique($user->achievements ?? []));
+
+        if (! in_array($data['key'], $achievements, true)) {
+            $achievements[] = $data['key'];
+            $user->update(['achievements' => $achievements]);
+        }
+
+        return response()->json(['achievements' => $achievements]);
+    }
+
+    public function theme(Request $request): JsonResponse
+    {
+        return response()->json(['theme' => $request->user()->theme]);
+    }
+
+    public function updateTheme(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'theme' => ['required', 'string', 'in:light,dark,trashpanda'],
+        ]);
+
+        $request->user()->update(['theme' => $data['theme']]);
+
+        return response()->json(['theme' => $request->user()->theme]);
+    }
+
     public function register(Request $request, AuditLogService $audit): JsonResponse
     {
         $data = $request->validate([
@@ -45,7 +90,7 @@ class AuthController extends Controller
         return response()->json(['user' => $user, 'tenant' => $tenant], 201);
     }
 
-    public function login(Request $request, AuditLogService $audit): JsonResponse
+    public function login(Request $request, AuditLogService $audit): JsonResponse|RedirectResponse
     {
         $data = $request->validate(['email' => ['required', 'email'], 'password' => ['required', 'string']]);
         $key = Str::transliterate(Str::lower($data['email']).'|'.$request->ip());
@@ -55,11 +100,19 @@ class AuthController extends Controller
         if (! Auth::attempt(['email' => Str::lower($data['email']), 'password' => $data['password']])) {
             RateLimiter::increment($key, 60);
 
-            return response()->json(['message' => 'Invalid credentials.'], 422);
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Invalid credentials.'], 422);
+            }
+
+            return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
         }
 
         RateLimiter::clear($key);
         $request->session()->regenerate();
+
+        if (! $request->expectsJson()) {
+            return redirect('/');
+        }
 
         return response()->json(['user' => $request->user(), 'tenants' => $request->user()->tenants], 200);
     }
@@ -69,6 +122,10 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        if (! $request->expectsJson()) {
+            return response()->json(['message' => 'Logged out.']);
+        }
 
         return response()->json(['message' => 'Logged out.']);
     }

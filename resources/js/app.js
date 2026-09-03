@@ -1,7 +1,7 @@
 import { createApp, createVNode, h, render, mergeProps } from 'vue';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-require('./bootstrap');
+import './bootstrap';
 // import App from './App.vue';
 import componentRegistry from './components.js';
 import '../css/app.css';

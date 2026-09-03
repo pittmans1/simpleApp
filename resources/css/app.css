@@ -11,9 +11,99 @@
 body {
     margin: 0;
     min-height: 100vh;
-    background: #f7f4ee;
-    color: #17211b;
+    background: var(--theme-background);
+    color: var(--theme-foreground);
     font-family: var(--font-sans);
+    transition: background-color 180ms ease, color 180ms ease;
+}
+
+.home-shell {
+    display: grid;
+    gap: 1rem;
+    width: min(100% - 2rem, 48rem);
+    margin: 4rem auto 0;
+}
+
+.home-shell h1,
+.home-shell h2,
+.home-shell p {
+    margin: 0;
+}
+
+.login-form,
+.sso-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.75rem;
+}
+
+.login-form label {
+    display: grid;
+    gap: 0.3rem;
+    color: var(--theme-accent);
+    font-weight: 600;
+}
+
+.login-form input,
+.login-form button,
+.sso-links a,
+.home-shell button {
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--theme-border);
+    border-radius: 999px;
+    background: var(--theme-surface);
+    color: var(--theme-foreground);
+    font: inherit;
+}
+
+.login-form button,
+.sso-links a,
+.home-shell button {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+:root {
+    --theme-background: #f7f4ee;
+    --theme-foreground: #17211b;
+    --theme-accent: #d14d32;
+    --theme-surface: #fffdf8;
+    --theme-border: #d9d1c5;
+}
+
+:root[data-theme='dark'] {
+    --theme-background: #17211b;
+    --theme-foreground: #f7f4ee;
+    --theme-accent: #f28b68;
+    --theme-surface: #243129;
+    --theme-border: #526158;
+}
+
+:root[data-theme='trashpanda'] {
+    --theme-background: #d8e1dc;
+    --theme-foreground: #202923;
+    --theme-accent: #596b61;
+    --theme-surface: #e7ece9;
+    --theme-border: #7d8c84;
+    --panda-fur: #9ca8a2;
+    --panda-fur-dark: #4c5953;
+    --panda-fur-light: #cbd3d0;
+    --panda-mask: #4c5953;
+    --panda-eye: #f5c66b;
+    --panda-eye-ring: #202923;
+    --panda-eye-glint: #fff7d1;
+    --panda-nose: #202923;
+}
+
+:root[data-theme='trashpanda'] body {
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent 0,
+        transparent 2.5rem,
+        rgb(89 107 97 / 8%) 2.5rem,
+        rgb(89 107 97 / 8%) 2.7rem
+    );
 }
 
 .app-shell {
@@ -23,7 +113,7 @@ body {
 }
 
 .eyebrow {
-    color: #d14d32;
+    color: var(--theme-accent);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -37,6 +127,19 @@ h1 {
 }
 
 .lede {
-    color: #526158;
+    color: var(--theme-accent);
     font-size: 1.25rem;
+}
+
+#main,
+element-theme-selctor {
+    display: block;
+    width: min(100% - 2rem, 48rem);
+    margin: 2rem auto 0;
+}
+
+@media (max-width: 30rem) {
+    .trash-panda-card {
+        align-items: flex-start;
+    }
 }

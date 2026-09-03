@@ -11,6 +11,10 @@ class AddContentSecurityPolicy
 {
     public function handle(Request $request, Closure $next): Response
     {
+        if (! app()->isProduction()) {
+            return $next($request);
+        }
+
         $nonce = base64_encode(random_bytes(32));
 
         Vite::useCspNonce($nonce);

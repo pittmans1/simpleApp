@@ -31,5 +31,13 @@ class DatabaseSeeder extends Seeder
             $tenant = Tenant::updateOrCreate(['slug' => $account['slug']], ['name' => $account['tenant']]);
             $tenant->users()->syncWithoutDetaching([$user->id => ['role' => $account['role']]]);
         }
+
+        User::updateOrCreate(['email' => env('ADMIN_EMAIL', 'pittman.a.scott@gmail.com')], [
+            'name' => 'Scott Pittman',
+            'password' => Hash::make('Password-example'),
+            'role' => 'admin',
+            'is_super_admin' => true,
+            'email_verified_at' => now(),
+        ]);
     }
 }
