@@ -19,8 +19,22 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: 'localhost',
+            port: 5173,
+            protocol: 'ws',
+        },
         watch: {
+            usePolling: true,
+            interval: 100,
             ignored: ['**/storage/framework/views/**'],
         },
+    },
+    preview: {
+        host: '0.0.0.0',
+        port: 4173,
     },
 });

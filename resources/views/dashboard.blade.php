@@ -12,7 +12,12 @@
             <a href="#about">About & resume</a>
         </nav>
         <market-chart></market-chart>
-        <docker-health-widget></docker-health-widget>
+        <docker-health-widget
+            :containers="{{ json_encode($dockerContainers ?? []) }}"
+            :source="{{ json_encode($dockerSource ?? 'demo') }}"
+            :docker-containers="{{ json_encode($dockerContainers ?? []) }}"
+            :docker-source="{{ json_encode($dockerSource ?? 'demo') }}">
+        </docker-health-widget>
         @if ($isTenantDashboard)
             <admin-panel tenant-id="{{ $tenant->slug }}"></admin-panel>
         @endif
