@@ -35,4 +35,32 @@ return [
         ],
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
+    ],
+
+    'twitter' => [
+        'client_id' => env('TWITTER_CLIENT_ID'),
+        'client_secret' => env('TWITTER_CLIENT_SECRET'),
+        'redirect' => env('TWITTER_REDIRECT_URI', '/auth/twitter/callback'),
+        'oauth' => 2,
+    ],
+
+    'linkedin' => [
+        'client_id' => env('LINKEDIN_CLIENT_ID'),
+        'client_secret' => env('LINKEDIN_CLIENT_SECRET'),
+        'redirect' => env('LINKEDIN_REDIRECT_URI', '/auth/linkedin/callback'),
+    ],
+
+    'stocks' => [
+        'key' => env('STOCK_API_KEY'),
+        'url' => env('STOCK_API_URL', 'https://finnhub.io/api/v1/quote'),
+    ],
+
+    'docker' => [
+        'socket' => env('DOCKER_SOCKET', '/var/run/docker.sock'),
+    ],
+
 ];

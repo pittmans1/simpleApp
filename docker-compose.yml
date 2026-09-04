@@ -15,12 +15,14 @@ services:
       DB_PASSWORD: demo
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      DOCKER_SOCKET: /var/run/docker.sock
       REDIS_CLIENT: phpredis
       CACHE_STORE: redis
       QUEUE_CONNECTION: redis
     command: sh -c "php artisan migrate --force && exec php-fpm"
     volumes:
-      - app_public:/var/www/html/public
+      - .:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       db:
         condition: service_healthy
@@ -42,15 +44,53 @@ services:
     networks: [demo]
 
   frontend:
+    profiles: [dev]
     image: node:22-alpine
     container_name: demo_frontend
     working_dir: /var/www/html
-    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
+    command: sh -c "npm install --no-audit --no-fund && npm run dev"
+    environment:
+      VITE_REVERB_APP_KEY: ${REVERB_APP_KEY:-local-demo-key}
+      VITE_REVERB_HOST: localhost
+      VITE_REVERB_PORT: 8080
+      VITE_REVERB_SCHEME: http
     ports:
       - "5173:5173"
     volumes:
       - .:/var/www/html
       - frontend_node_modules:/var/www/html/node_modules
+    networks: [demo]
+
+  reverb:
+    image: demo-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: demo_reverb
+    env_file: .env
+    environment:
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_ID: ${REVERB_APP_ID:-demo}
+      REVERB_APP_KEY: ${REVERB_APP_KEY:-local-demo-key}
+      REVERB_APP_SECRET: ${REVERB_APP_SECRET:-local-demo-secret}
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+      REVERB_SERVER_HOST: 0.0.0.0
+      REVERB_SERVER_PORT: 8080
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      app:
+        condition: service_started
+    networks: [demo]
+
+  java:
+    build: ./java
+    container_name: demo_java
+    expose:
+      - "8081"
     networks: [demo]
 
   db:

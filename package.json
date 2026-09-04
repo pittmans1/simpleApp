@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite --host 0.0.0.0"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^6.0.0",
@@ -17,5 +17,14 @@
     },
     "optionalDependencies": {
         "@laravel/multiplex": "^0.4.1"
+    },
+    "dependencies": {
+        "@popperjs/core": "^2.11.8",
+        "bootstrap": "^5.3.8",
+        "bootstrap-vue-next": "^1.1.0",
+        "chart.js": "^4.5.0",
+        "laravel-echo": "^2.4.0",
+        "pinia": "^3.0.0",
+        "pusher-js": "^8.6.0"
     }
 }

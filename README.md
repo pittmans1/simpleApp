@@ -9,7 +9,7 @@
 
 ## Run With Docker
 
-Docker handles the PHP dependencies, frontend dependencies, frontend build, PHP application, database, Redis, queue worker, scheduler, and Nginx web server.
+Docker handles the PHP dependencies, frontend dependencies, PHP application, database, Redis, queue worker, scheduler, and Nginx web server. Production images build frontend assets; development uses the Vite `dev` profile.
 
 ### Prerequisites
 
@@ -24,6 +24,22 @@ For the first boot, build the images and start every service:
 ```bash
 docker compose up -d --build
 ```
+
+For frontend development, use the Compose `dev` profile and Vite's live development server. You do not need to run `npm run build` while working locally:
+
+```bash
+docker compose --profile dev up -d frontend
+```
+
+The frontend is available at [http://localhost:5173](http://localhost:5173). The `frontend` service runs `npm run dev` only when the `dev` profile is enabled.
+
+For a production-style run, omit the profile:
+
+```bash
+docker compose up -d --build
+```
+
+The production image builds assets with `npm run build` in the Dockerfile and does not start a Vite development server.
 
 For later boots, start the existing services:
 
@@ -41,22 +57,24 @@ During `docker compose build app`:
 
 - Composer runs `composer install` in the `vendor` build stage.
 - npm runs `npm install` and `npm run build` in the `assets` build stage.
-- The `frontend` service runs `npm install` and starts the Vite development server.
+- The optional `frontend` service runs `npm install` and starts Vite only with `--profile dev`.
+- The `reverb` service runs the WebSocket server.
 
 The application is available at [http://localhost:8000](http://localhost:8000). Vite runs at [http://localhost:5173](http://localhost:5173) and watches frontend files for changes.
 
 ### Start the frontend with Docker
 
-Start only the Vite frontend service with:
+Start the Vite frontend service in development with:
 
 ```bash
-docker compose up -d frontend
+docker compose --profile dev up -d frontend
+docker compose up -d reverb
 ```
 
 The service installs the npm packages automatically and runs:
 
 ```bash
-npm run dev -- --host 0.0.0.0
+npm run dev
 ```
 
 To reinstall frontend dependencies manually:
@@ -91,6 +109,30 @@ Stop the Docker services with:
 ```bash
 docker compose down
 ```
+
+## Operations and Integrations
+
+The dashboard exposes tenant-scoped operations data at `/operations/stocks` and `/operations/docker`. Set `STOCK_API_KEY` to enable the Finnhub-compatible provider; without a key the UI uses deterministic demo quotes. Docker metrics are read-only and require the app container to mount `/var/run/docker.sock`.
+
+Admin actions are policy protected and available under `/tenants/{tenant}/admin/*` for tenant members with the `owner` or `admin` role. The command endpoint accepts only `about`, `route:list`, and `queue:monitor`; arbitrary shell commands are intentionally unavailable.
+
+The `/java/` Nginx route proxies to the internal Java health service on `java:8081`. Replace `java/Main.java` with the application you want to integrate while keeping its health contract.
+
+### Architecture
+
+```mermaid
+flowchart LR
+	Browser[Vue + Pinia] --> Nginx[Nginx]
+	Nginx --> Laravel[Laravel PHP-FPM]
+	Laravel --> MySQL[(MySQL)]
+	Laravel --> Redis[(Redis / queues)]
+	Laravel --> Reverb[Laravel Reverb]
+	Laravel --> Docker[Docker Engine socket]
+	Laravel --> Stocks[Stock provider]
+	Nginx --> Java[Java service :8081]
+```
+
+For production, put web and Reverb behind TLS, use managed database and Redis services, configure the stock API key through the deployment secret store, and restrict Docker socket access to the metrics container only.
 
 ## About Laravel
 

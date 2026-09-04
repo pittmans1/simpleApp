@@ -12,7 +12,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->redirectGuestsTo(fn (): string => route('login'));
+
+        $middleware->web(append: [
+            AddContentSecurityPolicy::class,
+        ]);
+
+        $middleware->alias([
+            'tenant' => ResolveTenant::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
