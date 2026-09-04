@@ -61,7 +61,7 @@ return [
 
     'docker' => [
         'socket' => env('DOCKER_SOCKET', '/var/run/docker.sock'),
-        'host' => env('DOCKER_HOST'),
+        'host' => env('DOCKER_HOST'), // null unless using TCP
         'tls_verify' => env('DOCKER_TLS_VERIFY', false),
         'cert_path' => env('DOCKER_CERT_PATH'),
     ],

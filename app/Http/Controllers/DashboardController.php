@@ -12,6 +12,7 @@ class DashboardController extends Controller
 	public function index(Request $request, DockerMetricsService $docker): View
 	{
 		$snapshot = $docker->snapshot();
+		// dd($snapshot);
 		return view('dashboard', [
 			'tenant' => $request->user()->tenants()->first(),
 			'isTenantDashboard' => false,
