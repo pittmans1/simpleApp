@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Support\TenantContext;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,7 +20,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $accounts = [
+            ['name' => 'Microsoft Admin', 'email' => 'microsoft-admin@example.test', 'tenant' => 'Microsoft', 'slug' => 'microsoft', 'role' => 'owner'],
+            ['name' => 'Northwind Admin', 'email' => 'northwind-admin@example.test', 'tenant' => 'Northwind Labs', 'slug' => 'northwind-labs', 'role' => 'owner'],
+            ['name' => 'Acme Admin', 'email' => 'acme-admin@example.test', 'tenant' => 'Acme Research', 'slug' => 'acme-research', 'role' => 'owner'],
+        ];
 
         foreach ($accounts as $account) {
             $user = User::updateOrCreate(['email' => $account['email']], [

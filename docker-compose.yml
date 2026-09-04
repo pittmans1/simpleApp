@@ -19,6 +19,13 @@ services:
       REDIS_CLIENT: phpredis
       CACHE_STORE: redis
       QUEUE_CONNECTION: redis
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_ID: ${REVERB_APP_ID:-demo}
+      REVERB_APP_KEY: ${REVERB_APP_KEY:-local-demo-key}
+      REVERB_APP_SECRET: ${REVERB_APP_SECRET:-local-demo-secret}
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
     command: sh -c "php artisan migrate --force && exec php-fpm"
     volumes:
       - .:/var/www/html
@@ -38,7 +45,6 @@ services:
     volumes:
       - .:/var/www/html:ro
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - app_public:/var/www/html/public
     depends_on:
       - app
     networks: [demo]
@@ -101,6 +107,8 @@ services:
       MYSQL_USER: demo
       MYSQL_PASSWORD: demo
       MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -140,6 +148,13 @@ services:
       REDIS_HOST: redis
       CACHE_STORE: redis
       QUEUE_CONNECTION: redis
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_ID: ${REVERB_APP_ID:-demo}
+      REVERB_APP_KEY: ${REVERB_APP_KEY:-local-demo-key}
+      REVERB_APP_SECRET: ${REVERB_APP_SECRET:-local-demo-secret}
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
     command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90
     depends_on:
       app:
@@ -163,6 +178,13 @@ services:
       REDIS_HOST: redis
       CACHE_STORE: redis
       QUEUE_CONNECTION: redis
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_ID: ${REVERB_APP_ID:-demo}
+      REVERB_APP_KEY: ${REVERB_APP_KEY:-local-demo-key}
+      REVERB_APP_SECRET: ${REVERB_APP_SECRET:-local-demo-secret}
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
     command: php artisan schedule:work
     depends_on:
       app:

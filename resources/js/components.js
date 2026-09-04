@@ -1,4 +1,3 @@
-import { BDropdownItem, BDropdown } from 'bootstrap-vue-next'
 import ElementTable from './components/ElementTable.vue'
 import ElementForm from './components/ElementForm.vue'
 import ElementButton from './components/ElementButton.vue'
@@ -12,11 +11,7 @@ import DockerHealthWidget from './components/DockerHealthWidget.vue'
 import MarketChart from './components/MarketChart.vue'
 
 export default {
-    BDropdownItem,
-    BDropdown,
     registerComponents(app = null) {
-        app?.component('BDropdownItem', BDropdownItem)
-        app?.component('BDropdown', BDropdown)
         const components = {
             'element-table': ElementTable,
             'element-form': ElementForm,

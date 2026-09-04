@@ -9,11 +9,11 @@ class TenantPolicy
 {
     public function view(User $user, Tenant $tenant): bool
     {
-        return $user->tenants()->whereKey($tenant->getKey())->exists();
+        return $user->isSuperAdmin() || $user->hasTenant($tenant);
     }
 
     public function manage(User $user, Tenant $tenant): bool
     {
-        return $user->tenants()->whereKey($tenant->getKey())->wherePivotIn('role', ['owner', 'admin'])->exists();
+        return $user->isAdmin($tenant);
     }
 }

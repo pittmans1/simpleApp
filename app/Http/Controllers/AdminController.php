@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tenant;
+use App\Models\AuditLog;
 use App\Services\AuditLogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,6 +11,13 @@ use Illuminate\Support\Facades\Artisan;
 
 class AdminController extends Controller
 {
+    public function auditLogs(Request $request): JsonResponse
+    {
+        abort_unless($request->user()?->isSuperAdmin(), 403);
+
+        return response()->json(AuditLog::withoutGlobalScope('tenant')->latest('created_at')->paginate(100));
+    }
+
     public function users(Tenant $tenant): JsonResponse
     {
         $this->authorize('manage', $tenant);

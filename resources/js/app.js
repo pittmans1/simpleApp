@@ -5,6 +5,9 @@ import Pusher from 'pusher-js';
 import './bootstrap';
 import componentRegistry from './components.js';
 import '../css/app.css';
+import appStyles from '../css/app.css?inline';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 
 window.Pusher = Pusher;
 

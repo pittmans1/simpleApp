@@ -48,5 +48,5 @@ Route::middleware(['auth', 'tenant'])->prefix('tenants/{tenant}')->group(functio
     Route::post('admin/commands', [AdminController::class, 'command']);
 });
 Route::middleware('admin')->prefix('admin')->group(function (): void {
-    Route::get('audit-logs', [AuditLogController::class, 'index']);
+    Route::get('audit-logs', [AdminController::class, 'auditLogs']);
 });

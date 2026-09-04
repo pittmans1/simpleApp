@@ -60,7 +60,7 @@ During `docker compose build app`:
 - The optional `frontend` service runs `npm install` and starts Vite only with `--profile dev`.
 - The `reverb` service runs the WebSocket server.
 
-The application is available at [http://localhost:8000](http://localhost:8000). Vite runs at [http://localhost:5173](http://localhost:5173) and watches frontend files for changes.
+The application is available at [http://localhost:8000](http://localhost:8000). Vite runs at [http://localhost:5173](http://localhost:5173) and watches frontend files for changes. Reverb runs at [http://localhost:8080](http://localhost:8080).
 
 ### Start the frontend with Docker
 
